@@ -16,6 +16,4 @@ export class User extends Base {
     @Column({ type: 'enum', default: Role.USER, enum: Role })
     role: string
 
-
-
 }

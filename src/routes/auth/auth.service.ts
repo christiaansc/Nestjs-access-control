@@ -7,6 +7,7 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import * as bcrypt from 'bcrypt'
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserActiveInterface } from 'src/shared/interfaces/active-user.interface';
 
 
 @Injectable()
@@ -19,7 +20,7 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
-    async register(userObject: RegisterAuthDto) {
+    async register(userObject: RegisterAuthDto, userActive: UserActiveInterface) {
         const { email, password } = userObject
         const user = await this.userRepository.findOneBy({ email })
         if (user) throw new HttpException('email is already used', HttpStatus.BAD_REQUEST);
@@ -27,8 +28,8 @@ export class AuthService {
         userObject = { ...userObject, password: hashPass }
         const newUser = this.userRepository.create(userObject)
         try {
-            await this.userRepository.save(newUser)
-            return { statusCode: HttpStatus.CREATED, message: `User ${newUser.email} created Successfully ` }
+            await this.userRepository.save({ ...newUser, createdBy: userActive.id })
+            return { statusCode: HttpStatus.CREATED, message: `User ${newUser.email} created Successfully` }
 
         } catch (error) {
             throw new HttpException('Error creating user', HttpStatus.INTERNAL_SERVER_ERROR)
@@ -38,9 +39,6 @@ export class AuthService {
     }
 
     async SignIn(userObjectLogin: LoginAuthDto) {
-
-
-
         const { email, password } = userObjectLogin
         const user = await this.userService.findoneByEmailWithPassword(email)
         if (!user) throw new HttpException('User not Found', HttpStatus.NOT_FOUND)
@@ -49,8 +47,11 @@ export class AuthService {
         const payload = { id: user.id, username: user.name, email: user.email, role: user.role };
         const access_token = await this.jwtService.signAsync(payload)
         return { access_token }
+    }
 
 
+    async profile({ email }: { email: string }): Promise<User> {
+        return await this.userRepository.findOneBy({ email });
     }
 
 }
