@@ -3,6 +3,7 @@ import { Base } from './_base/base'
 import { Role } from 'src/shared/emuns/roles.enum';
 
 
+
 @Entity({ name: 'user' })
 export class User extends Base {
 

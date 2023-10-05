@@ -45,8 +45,8 @@ export class AuthService {
         const checkPassword = await bcrypt.compare(password, user.password)
         if (!checkPassword) throw new HttpException('Incorrect password', HttpStatus.FORBIDDEN)
         const payload = { id: user.id, username: user.name, email: user.email, role: user.role };
-        const access_token = await this.jwtService.signAsync(payload)
-        return { access_token }
+        const token = await this.jwtService.signAsync(payload)
+        return { token, email }
     }
 
 
