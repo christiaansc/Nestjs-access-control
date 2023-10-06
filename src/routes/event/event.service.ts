@@ -16,16 +16,11 @@ export class EventService {
   ) { }
 
   async create(createEventDto: CreateEventDto, userActive: UserActiveInterface) {
-
-
-    const { producerId } = createEventDto
-
     const eventObj = this.eventRepository.create(createEventDto)
 
-    console.log({ createEventDto, userActive, producerId, eventObj });
     try {
 
-      await this.eventRepository.save({ ...createEventDto, createdBy: userActive.id, producerId })
+      await this.eventRepository.save({ ...eventObj, createdBy: userActive.id })
       return { statusCode: HttpStatus.CREATED, message: `User ${createEventDto.name} created Successfully` }
 
     } catch (error) {

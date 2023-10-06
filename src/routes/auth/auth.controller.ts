@@ -12,7 +12,7 @@ export class AuthController {
 
     constructor(private authService: AuthService) { }
     @Post('register')
-    @Auth(Role.ADMIN)
+    @Auth(Role.USER)
     async register(@Body() userObject: RegisterAuthDto, @ActiveUser() userActive: UserActiveInterface) {
         return await this.authService.register(userObject, userActive)
     }

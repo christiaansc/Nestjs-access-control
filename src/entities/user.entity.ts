@@ -5,7 +5,7 @@ import { Role } from 'src/shared/emuns/roles.enum';
 
 
 @Entity({ name: 'user' })
-export class User extends Base {
+export class User extends Base<User> {
 
     @Column({ nullable: true })
     name: string

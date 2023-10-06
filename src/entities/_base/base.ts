@@ -2,7 +2,13 @@ import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, Upd
 import { v4 as uuid } from 'uuid';
 
 
-export class Base {
+export class Base<T> {
+
+
+    constructor(entity: Partial<T>) {
+        Object.assign(this, entity)
+    }
+
     @PrimaryGeneratedColumn('uuid')
     id: string = uuid();
 
@@ -18,5 +24,6 @@ export class Base {
 
     @DeleteDateColumn({ select: false })
     deletedAt?: Date;
+
 
 }

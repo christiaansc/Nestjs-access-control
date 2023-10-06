@@ -41,7 +41,7 @@ export class CreateEventDto {
 
     @IsUUID()
     @IsNotEmpty()
-    producerId: string
+    producer_uuid: string
 
 
 }

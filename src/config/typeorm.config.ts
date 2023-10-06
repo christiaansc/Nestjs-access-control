@@ -22,5 +22,7 @@ export const typeOrmConfig = async (configService: ConfigService): Promise<TypeO
                     rejectUnauthorized: false
                 }
                 : null
-    }
+    },
+    migrations: [join(__dirname + '/migrations/*{.ts,.js}')],
+    migrationsRun: true,
 });

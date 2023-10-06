@@ -1,14 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { v4 as uuid } from 'uuid';
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Producer } from "./producer.entity";
 import { EventStatus } from "src/shared/emuns/event.enum";
 import { Base } from "./_base/base";
 
 @Entity({ name: 'event' })
-export class Event extends Base {
-    @PrimaryGeneratedColumn('uuid')
-    id: string = uuid();
-
+export class Event extends Base<Event> {
     @Column()
     name: string
 
@@ -36,7 +32,11 @@ export class Event extends Base {
     @Column({ type: 'time' }) // Hora de termino
     endTime: string;
 
-    @ManyToOne(() => Producer, (producer) => producer.id)
+    @Column({ type: "uuid", nullable: false })
+    producer_uuid: string
+
+    @ManyToOne(() => Producer, (producer) => producer.events, { eager: true })
+    @JoinColumn({ name: 'producer_uuid', referencedColumnName: 'id' })
     producer: Producer
 
     @Column({ type: 'enum', default: EventStatus.PENDING, enum: EventStatus })
